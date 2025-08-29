@@ -1,0 +1,181 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package challenge;
+
+service ChallengeService {
+    rpc GetList(GetListRequest) returns (GetListResponse);
+    rpc CreateChallenge(CreateChallengeRequest) returns (CreateChallengeResponse);
+    rpc GetChallenge(GetChallengeRequest) returns (GetChallengeResponse);
+    rpc UpdateChallenge(UpdateChallengeRequest) returns (UpdateChallengeResponse);
+    rpc RefuseChallenge(RefuseChallengeRequest) returns (RefuseChallengeResponse);
+    rpc CheckPoint(CheckPointRequest) returns (CheckPointResponse);
+    rpc GetHistory(GetHistoryRequest) returns (GetHistoryResponse);
+    rpc GetHistoryItem(GetHistoryItemRequest) returns (GetHistoryItemResponse);
+}
+
+message GetListRequest {
+    string userId = 1;
+    ChallengeStatus status = 2;
+}
+
+message GetListResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    repeated Challenge rows = 3;
+    int32 total = 4;
+    int32 page = 5;
+    int32 size = 6;
+}
+
+message CreateChallengeRequest {
+    string title = 1;
+    string description = 2;
+    ChallengeColor mainColor = 3;
+    ChallengeDirection direction = 4;
+    string checkPoint = 5;
+    google.protobuf.Timestamp startFrom = 6;
+}
+
+message CreateChallengeResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    ChallengeItem data = 3;
+}
+
+message GetChallengeRequest {
+    string id = 1;
+}
+
+message GetChallengeResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    ChallengeItem data = 3;
+}
+
+message UpdateChallengeRequest {
+    string title = 1;
+    string description = 2;
+    ChallengeColor mainColor = 3;
+    ChallengeDirection direction = 4;
+    string checkPoint = 5;
+    google.protobuf.Timestamp startFrom = 6;
+}
+
+message UpdateChallengeResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    ChallengeItem data = 3;
+}
+
+message RefuseChallengeRequest {
+    string id = 1;
+}
+
+message RefuseChallengeResponse {
+    int32 status = 1;
+    repeated string error = 2;
+}
+
+message CheckPointRequest {
+    string id = 1;
+    string description = 2;
+    google.protobuf.Timestamp date = 3;
+}
+
+message CheckPointResponse {
+    int32 status = 1;
+    repeated string error = 2;
+}
+
+message GetHistoryRequest {
+    string id = 1;
+}
+
+message GetHistoryResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    repeated History rows = 3;
+}
+
+message GetHistoryItemRequest {
+    string id = 1;
+}
+
+message GetHistoryItemResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    HistoryItem data = 3;
+}
+
+message Challenge {
+    string id = 1;
+    string title = 2;
+    ChallengeStatus status = 3;
+    string description = 4;
+    ChallengeDirection direction = 5;
+    ChallengeColor mainColor = 6;
+    string checkPoint = 7;
+    int32 daysLeft = 8;
+    google.protobuf.Timestamp startFrom = 9;
+}
+
+message ChallengeItem {
+    string id = 1;
+    string title = 2;
+    ChallengeStatus status = 3;
+    string description = 4;
+    ChallengeDirection direction = 5;
+    ChallengeColor mainColor = 6;
+    string checkPoint = 7;
+    int32 daysLeft = 8;
+    google.protobuf.Timestamp startFrom = 9;
+    google.protobuf.Timestamp createdAt = 10;
+    google.protobuf.Timestamp updatedAt = 11;
+}
+
+message History {
+    string id = 1;
+    string description = 2;
+    google.protobuf.Timestamp date = 3;
+}
+
+message HistoryItem {
+    string id = 1;
+    string description = 2;
+    google.protobuf.Timestamp date = 3;
+    repeated Attachment attachments = 4;
+}
+
+message Attachment {
+    string id = 1;
+    string url = 2;
+    string type = 3;
+    string description = 4;
+}
+
+enum ChallengeColor {
+    RED = 0;
+    ORANGE = 1;
+    YELLOW = 2;
+    GREEN = 3;
+    TEAL = 4;
+    CYAN = 5;
+    BLUE = 6;
+    INDIGO = 7;
+    PURPLE = 8;
+    PINK = 9;
+}
+
+enum ChallengeDirection {
+    LEFT = 0;
+    RIGHT = 1;
+}
+
+enum ChallengeStatus {
+    WAITING = 0;
+    RUNNING = 1;
+    COMPLETED = 2;
+    FAILED = 3;
+}
