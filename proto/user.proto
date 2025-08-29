@@ -1,0 +1,249 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package user;
+
+service UserService {
+    rpc GetSelf(GetSelfRequest) returns (GetSelfResponse);
+    rpc GetAppSettings(GetAppSettingsRequest) returns (GetAppSettingsResponse);
+    rpc GetNotificationSettings(GetNotificationSettingsRequest) returns (GetNotificationSettingsResponse);
+    rpc GetSocialSettings(GetSocialSettingsRequest) returns (GetSocialSettingsResponse);
+    rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
+    rpc UpdateSelf(UpdateSelfRequest) returns (UpdateSelfResponse);
+    rpc UpdateAppSettings(UpdateAppSettingsRequest) returns (UpdateAppSettingsResponse);
+    rpc UpdateNotificationSettings(UpdateNotificationSettingsRequest) returns (UpdateNotificationSettingsResponse);
+    rpc UpdateSocialSettings(UpdateSocialSettingsRequest) returns (UpdateSocialSettingsResponse);
+    rpc DeactivateAccount(DeactivateAccountRequest) returns (DeactivateAccountResponse);
+    rpc ActivateAccount(ActivateAccountRequest) returns (ActivateAccountResponse);
+}
+
+message GetSelfRequest {
+    string userId = 1;
+}
+
+message GetSelfResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    Profile data = 3;
+}
+
+message GetAppSettingsRequest {
+    string userId = 1;
+}
+
+message GetAppSettingsResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    AppSettings data = 3;
+}
+
+message GetNotificationSettingsRequest {
+    string userId = 1;
+}
+
+message GetNotificationSettingsResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    NotificationSettings data = 3;
+}
+
+message GetSocialSettingsRequest {
+    string userId = 1;
+}
+
+message GetSocialSettingsResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    SocialSettings data = 3;
+}
+
+message GetUsersRequest {
+    string search = 1;
+    string followers = 2;
+    string subscriptions = 3;
+}
+
+message GetUsersResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    repeated User rows = 3;
+    int32 total = 4;
+    int32 page = 5;
+    int32 size = 6;
+}
+
+message UpdateSelfRequest {
+    string name = 2;
+    string email = 4;
+    string imageUrl = 5;
+    string birthdate = 6;
+}
+
+message UpdateSelfResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    Profile data = 3;
+}
+
+message UpdateAppSettingsRequest {
+    Theme theme = 1;
+    ChallengesDirection challengesDirection = 2;
+    int32 maxOffset = 3;
+    repeated Inviter allowInvitations = 4;
+}
+
+message UpdateAppSettingsResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    AppSettings data = 3;
+}
+
+message UpdateNotificationSettingsRequest {
+    bool enabled = 1;
+    bool startChallenge = 2;
+    int32 checkpointReminder = 3;
+    bool invitations = 4;
+    bool newFollower = 5;
+    bool subscriptionChallenges = 6;
+    bool news = 7;
+    bool account = 8;
+    bool billing = 9;
+}
+
+message UpdateNotificationSettingsResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    NotificationSettings data = 3;
+}
+
+message UpdateSocialSettingsRequest {
+    bool autoPublishingEnabled = 1;
+    Network telegram = 2;
+    Network instagram = 3;
+    Network vkontakte = 4;
+    Network facebook = 5;
+}
+
+message UpdateSocialSettingsResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    SocialSettings data = 3;
+}
+
+message DeactivateAccountRequest {
+    string userId = 1;
+    string reason = 2;
+}
+
+message DeactivateAccountResponse {
+    int32 status = 1;
+    repeated string error = 2;
+}
+
+message ActivateAccountRequest {
+    string userId = 1;
+}
+
+message ActivateAccountResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    string userId = 3;
+}
+
+message Profile {
+    string id = 1;
+    AccountStatus status = 2;
+    AccountType type = 3;
+    string name = 4;
+    string phone = 5;
+    string email = 6;
+    string imageUrl = 7;
+    string birthdate = 8;
+    int32 subscriptionsCount = 9;
+    int32 followersCount = 10;
+    Counter challengesCounter = 11;
+    google.protobuf.Timestamp nearestCheck = 12;
+    google.protobuf.Timestamp createdAt = 13;
+    google.protobuf.Timestamp updatedAt = 14;
+}
+
+message Counter {
+    int32 total = 1;
+    int32 completed = 2;
+    int32 refused = 3;
+}
+
+message AppSettings {
+    Theme theme = 1;
+    ChallengesDirection challengesDirection = 2;
+    int32 maxOffset = 3;
+    repeated Inviter allowInvitations = 4;
+}
+
+message NotificationSettings {
+    bool enabled = 1;
+    bool startChallenge = 2;
+    int32 checkpointReminder = 3;
+    bool invitations = 4;
+    bool newFollower = 5;
+    bool subscriptionChallenges = 6;
+    SystemNotification system = 7;
+}
+
+message SystemNotification {
+    bool news = 2;
+    bool account = 4;
+    bool billing = 5;
+}
+
+message SocialSettings {
+    bool autoPublishingEnabled = 1;
+    Network telegram = 2;
+    Network instagram = 3;
+    Network vkontakte = 4;
+    Network facebook = 5;
+}
+
+message Network {
+    bool enabled = 1;
+    string url = 2;
+    string profile = 4;
+    string apiKey = 5;
+}
+
+message User {
+    string id = 1;
+    string name = 2;
+    int32 activeChallenges = 3;
+    bool isFollower = 4;
+    bool isSubscription = 5;
+    repeated string participateYours = 6;
+}
+
+enum AccountStatus {
+    ACTIVE = 0;
+    INACTIVE = 1;
+}
+
+enum AccountType {
+    FREE = 0;
+    PRO = 1;
+}
+
+enum Inviter {
+    ALL = 0;
+    FOLLOWERS = 1;
+    SUBSCRIPTIONS = 2;
+    NOTHING = 3;
+}
+
+enum Theme {
+    LIGHT = 0;
+    DARK = 1;
+}
+
+enum ChallengesDirection {
+    LEFT = 0;
+    RIGHT = 1;
+}
